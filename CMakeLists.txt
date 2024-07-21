@@ -2,9 +2,12 @@ cmake_minimum_required(VERSION 3.9)
 
 project(CatGrayRemoteObjects-Projects LANGUAGES CXX)
 
-if (UNIX)
-add_compile_options(-Wall -fPIC -Wno-stringop-overflow)
-endif(UNIX)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+#if (UNIX)
+#add_compile_options(-Wall -fPIC -Wno-stringop-overflow)
+#endif(UNIX)
 
 message(STATUS "------------------------------------------------------------" )
 message(STATUS "[${PROJECT_NAME}] Configuration summary."                     )
