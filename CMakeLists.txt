@@ -41,7 +41,6 @@ set(EXAMPLES
 
 foreach(3rdparty_module ${3RDPARTY})
     if(${3rdparty_module} STREQUAL "libzmq")
-        message("3rdparty config: " ${3rdparty_module})
         set(ENABLE_PRECOMPILED OFF
             CACHE BOOL "ENABLE_PRECOMPILED OFF" FORCE)
         set(BUILD_TESTS OFF
@@ -51,7 +50,6 @@ foreach(3rdparty_module ${3RDPARTY})
     endif()
 
     if(${3rdparty_module} STREQUAL "cppzmq")
-        message("3rdparty config: " ${3rdparty_module})
         set(CPPZMQ_BUILD_TESTS OFF
             CACHE BOOL "CPPZMQ_BUILD_TESTS OFF" FORCE)
     endif()
