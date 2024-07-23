@@ -5,5 +5,5 @@
 	path = 3rdparty/cppzmq
 	url = https://github.com/zeromq/cppzmq.git
 [submodule "imgui"]
-	path = 3rdparty/imgui/imgui
+	path = 3rdparty/imgui-gl3/imgui
 	url = https://github.com/ocornut/imgui.git
