@@ -37,6 +37,9 @@
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
 
+
+static std::string message;
+
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -52,15 +55,17 @@ void SubscriberThread2(zmq::context_t *ctx) {
 
     while (1) {
         // Receive all parts of the message
-        std::vector<zmq::message_t> recv_msgs;
+
         std::cout << "wait message" << std::endl;
+        std::vector<zmq::message_t> trecv_msgs;
         zmq::recv_result_t result =
-            zmq::recv_multipart(subscriber, std::back_inserter(recv_msgs));
+            zmq::recv_multipart(subscriber, std::back_inserter(trecv_msgs));
         assert(result && "recv failed");
         assert(*result == 2);
-
-        std::cout << "Thread3: [" << recv_msgs[0].to_string() << "] "
-                  << recv_msgs[1].to_string() << std::endl;
+//        std::cout << "Thread3: [" << recv_msgs[0].to_string() << "] "
+//                  << recv_msgs[1].to_string() << std::endl;
+        message.clear();
+        message = std::string("[" + trecv_msgs[0].to_string() + "] " + trecv_msgs[1].to_string());
     }
 }
 
@@ -182,12 +187,12 @@ int main(int, char**)
 
             ImGui::Begin("client", nullptr, flags);                          // Create a window called "Hello, world!" and append into it.
 
-            if (ImGui::Button("Send Message"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (!message.empty())                            // Buttons return true when clicked (most widgets return true when edited/activated)
             {
-                counter++;
+                ImGui::Text(message.c_str());
+
             }
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
+            //ImGui::Text("counter = %d", counter);
             ImVec2 windowSize = ImGui::GetWindowSize();
             // 获取窗口的内容区域大小
             ImVec2 contentRegionSize = ImGui::GetContentRegionAvail();

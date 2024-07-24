@@ -164,9 +164,14 @@ int main(int, char**)
 
             if (ImGui::Button("Send Message"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
             {
-                publisher.send(zmq::str_buffer("C"), zmq::send_flags::sndmore);
-                publisher.send(zmq::str_buffer("Message in C envelope"));
                 counter++;
+                publisher.send(zmq::str_buffer("C"), zmq::send_flags::sndmore);
+
+                std::string message = std::string(std::string("Message in C envelope +") + std::to_string(counter));
+                zmq::message_t zmq_message(message.size());
+                memcpy(zmq_message.data(), message.data(), message.size());
+                publisher.send(zmq_message, zmq::send_flags::none);
+
             }
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
