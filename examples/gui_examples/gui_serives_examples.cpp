@@ -45,10 +45,10 @@ static void glfw_error_callback(int error, const char* description)
 // Main code
 int main(int, char**)
 {
-    zmq::context_t ctx(0);
+    zmq::context_t ctx(1);
     zmq::socket_t publisher(ctx, zmq::socket_type::pub);
 
-    publisher.bind("ipc://soname");
+    publisher.bind("ipc:///tmp/pubsub.ipc");
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())

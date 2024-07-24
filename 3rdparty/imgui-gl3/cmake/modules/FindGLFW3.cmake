@@ -13,16 +13,24 @@
 # default search dirs
 # 
 # Cmake file from: https://github.com/daw42/glslcookbook
-
+if(WIN32)
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(WINDOWS_GLFW_LIB_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/libs/libglfw3/lib-vc2010-64")
+elseif (CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(WINDOWS_GLFW_LIB_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/libs/libglfw3/lib-vc2010-32")
+endif()
+endif()
 set( _glfw3_HEADER_SEARCH_DIRS
 "/usr/include"
 "/usr/local/include"
 "${CMAKE_SOURCE_DIR}/includes"
+"${CMAKE_CURRENT_SOURCE_DIR}/includes"
 "C:/Program Files (x86)/glfw/include" )
 set( _glfw3_LIB_SEARCH_DIRS
 "/usr/lib"
 "/usr/local/lib"
 "${CMAKE_SOURCE_DIR}/lib"
+${WINDOWS_GLFW_LIB_DIRS}
 "C:/Program Files (x86)/glfw/lib-msvc110" )
 
 # Check environment for root search directory
@@ -40,10 +48,13 @@ endif()
 # Search for the header
 FIND_PATH(GLFW3_INCLUDE_DIR "GLFW/glfw3.h"
 PATHS ${_glfw3_HEADER_SEARCH_DIRS} )
-
 # Search for the library
 FIND_LIBRARY(GLFW3_LIBRARY NAMES glfw3 glfw
 PATHS ${_glfw3_LIB_SEARCH_DIRS} )
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GLFW3 DEFAULT_MSG
 GLFW3_LIBRARY GLFW3_INCLUDE_DIR)
+if(WIN32)
+    set(GLFW3_LIBRARY ${WINDOWS_GLFW_LIB_DIRS}/glfw3.lib)
+endif()
+

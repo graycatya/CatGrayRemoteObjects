@@ -45,7 +45,7 @@ static void glfw_error_callback(int error, const char* description)
 void SubscriberThread2(zmq::context_t *ctx) {
     //  Prepare our context and subscriber
     zmq::socket_t subscriber(*ctx, zmq::socket_type::sub);
-    subscriber.connect("ipc://soname");
+    subscriber.connect("ipc:///tmp/pubsub.ipc");
 
     //  Thread3 opens ALL envelopes
     subscriber.set(zmq::sockopt::subscribe, "C");
@@ -67,7 +67,7 @@ void SubscriberThread2(zmq::context_t *ctx) {
 // Main code
 int main(int, char**)
 {
-    zmq::context_t ctx(0);
+    zmq::context_t ctx(1);
     auto thread3 = std::async(std::launch::async, SubscriberThread2, &ctx);
 
     glfwSetErrorCallback(glfw_error_callback);
