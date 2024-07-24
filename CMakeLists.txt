@@ -26,11 +26,23 @@ message(STATUS "------------------------------------------------------------ ")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+option(IMGUI_TEST "Build imgui test" ON)
+set(FOLDER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/imgui-gl3/imgui")
 
+if(EXISTS ${FOLDER_PATH})
+    file(GLOB FILES_IN_FOLDER "${FOLDER_PATH}/*")
+    if(NOT FILES_IN_FOLDER)
+        set(IMGUI_TEST OFF)
+    else()
+    endif()
+else()
+    set(IMGUI_TEST OFF)
+endif()
 
 set(3RDPARTY
     libzmq
     cppzmq
+    imgui-gl3
 )
 
 
@@ -40,6 +52,7 @@ set(MODULES
 
 set(EXAMPLES
     cppzmq_examples
+    gui_examples
 )
 
 foreach(3rdparty_module ${3RDPARTY})
@@ -57,7 +70,14 @@ foreach(3rdparty_module ${3RDPARTY})
             CACHE BOOL "CPPZMQ_BUILD_TESTS OFF" FORCE)
     endif()
 
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/${3rdparty_module})
+    if(NOT ${3rdparty_module} STREQUAL "imgui-gl3")
+        add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/${3rdparty_module})
+    else()
+        if(IMGUI_TEST)
+            add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/${3rdparty_module})
+        endif()
+    endif()
+
 endforeach(3rdparty_module ${3RDPARTY})
 
 # foreach(module ${MODULES})
