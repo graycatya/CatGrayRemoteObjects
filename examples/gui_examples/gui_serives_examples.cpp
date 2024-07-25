@@ -48,7 +48,7 @@ int main(int, char**)
     zmq::context_t ctx(1);
     zmq::socket_t publisher(ctx, zmq::socket_type::pub);
 
-    publisher.bind("tcp://localhost:10840");
+    publisher.bind("ipc:///tmp/ipc-example");
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
