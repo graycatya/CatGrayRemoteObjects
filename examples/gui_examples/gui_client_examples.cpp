@@ -48,7 +48,7 @@ static void glfw_error_callback(int error, const char* description)
 void SubscriberThread2(zmq::context_t *ctx) {
     //  Prepare our context and subscriber
     zmq::socket_t subscriber(*ctx, zmq::socket_type::sub);
-    subscriber.connect("ipc:///tmp/ipc-example");
+    subscriber.connect("ipc://catgrayremoteobject");
 
     //  Thread3 opens ALL envelopes
     subscriber.set(zmq::sockopt::subscribe, "C");

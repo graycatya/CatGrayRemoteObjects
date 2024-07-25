@@ -36,6 +36,7 @@
 
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
+#include "zmq.h"
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -45,10 +46,21 @@ static void glfw_error_callback(int error, const char* description)
 // Main code
 int main(int, char**)
 {
+    // if (!zmq_has ("ipc")) {
+    //     std::cout << "ipc is not available" << std::endl;
+    // }
+    // char my_endpoint[256];
+    // void *const socket = zmq_socket (zmq_ctx_new (), ZMQ_PUB);
+
+    // int rc = zmq_bind (socket, "ipc://tmp");
+    // if (rc != 0)
+    // {
+    //     std::cout << "ipc bind error" << std::endl;
+    // }
     zmq::context_t ctx(1);
     zmq::socket_t publisher(ctx, zmq::socket_type::pub);
 
-    publisher.bind("ipc:///tmp/ipc-example");
+    publisher.bind("ipc://catgrayremoteobject");
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
