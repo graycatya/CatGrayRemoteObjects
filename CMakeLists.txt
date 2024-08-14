@@ -61,6 +61,7 @@ foreach(3rdparty_module ${3RDPARTY})
         #     CACHE BOOL "ENABLE_PRECOMPILED OFF" FORCE)
         # set(BUILD_TESTS OFF
         #     CACHE BOOL "BUILD_TESTS OFF" FORCE)
+        set(BUILD_STATIC OFF)
         set(WITH_PERF_TOOL OFF
             CACHE BOOL "WITH_PERF_TOOL OFF" FORCE)
     endif()
