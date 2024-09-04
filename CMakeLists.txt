@@ -59,8 +59,10 @@ foreach(3rdparty_module ${3RDPARTY})
     if(${3rdparty_module} STREQUAL "libzmq")
         # set(ENABLE_PRECOMPILED OFF
         #     CACHE BOOL "ENABLE_PRECOMPILED OFF" FORCE)
-        # set(BUILD_TESTS OFF
-        #     CACHE BOOL "BUILD_TESTS OFF" FORCE)
+        set(BUILD_TESTS OFF
+            CACHE BOOL "BUILD_TESTS OFF" FORCE)
+        set(ZMQ_BUILD_TESTS OFF
+            CACHE BOOL "BUILD_TESTS OFF" FORCE)
         set(BUILD_STATIC OFF)
         set(WITH_PERF_TOOL OFF
             CACHE BOOL "WITH_PERF_TOOL OFF" FORCE)
