@@ -24,9 +24,12 @@ message(STATUS " .. cmake current source ................. = ${CMAKE_CURRENT_SOU
 message(STATUS " .. cmake system name ................. = ${CMAKE_SYSTEM_NAME}")
 message(STATUS "------------------------------------------------------------ ")
 
+# build option
+option(CATGRAYREMOTEOBJECTSPROJECTS_EXAMPLES "Build examples" OFF)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-option(IMGUI_TEST "Build imgui test" ON)
+option(IMGUI_TEST "Build imgui test" OFF)
 set(FOLDER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/imgui-gl3/imgui")
 
 if(EXISTS ${FOLDER_PATH})
@@ -86,7 +89,8 @@ endforeach(3rdparty_module ${3RDPARTY})
 # foreach(module ${MODULES})
 #     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/${module})
 # endforeach(module ${MODULES})
-
+if(CATGRAYREMOTEOBJECTSPROJECTS_EXAMPLES)
 foreach(example ${EXAMPLES})
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples/${example})
 endforeach(example ${EXAMPLES})
+endif()
