@@ -37,43 +37,73 @@
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
 
+#include "CatGrayRemoteObjects.h"
+
+CatGrayRemoteObjects clientremoteobject;
+CatGrayRemoteObjects subremoteobject;
 
 static std::string message;
+static std::string clientmessage;
+
 
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-void SubscriberThread2(zmq::context_t *ctx) {
-    //  Prepare our context and subscriber
-    zmq::socket_t subscriber(*ctx, zmq::socket_type::sub);
-    subscriber.connect("ipc://catgrayremoteobject");
-
-    //  Thread3 opens ALL envelopes
-    subscriber.set(zmq::sockopt::subscribe, "C");
-
-    while (1) {
-        // Receive all parts of the message
-
-        std::cout << "wait message" << std::endl;
-        std::vector<zmq::message_t> trecv_msgs;
-        zmq::recv_result_t result =
-            zmq::recv_multipart(subscriber, std::back_inserter(trecv_msgs));
-        assert(result && "recv failed");
-        assert(*result == 2);
-//        std::cout << "Thread3: [" << recv_msgs[0].to_string() << "] "
-//                  << recv_msgs[1].to_string() << std::endl;
-        message.clear();
-        message = std::string("[" + trecv_msgs[0].to_string() + "] " + trecv_msgs[1].to_string());
+static void SubReadMessage(std::vector<zmq::message_t> messages, bool errormessage)
+{
+    if(!errormessage)
+    {
+        if(messages.size() > 1)
+        {
+            messages.at(0).routing_id();
+            message = std::string("[" + messages[0].to_string() + "] " + messages[1].to_string());
+            std::cout << " message: " << message << std::endl;
+        } else if(messages.size() > 0)
+        {
+            messages.at(0).routing_id();
+            message = std::string(messages[0].to_string());
+            std::cout << " message: " << message << std::endl;
+        }
     }
 }
+
+static void ClientReadMessage(std::vector<zmq::message_t> messages, bool errormessage)
+{
+    if(!errormessage)
+    {
+        if(messages.size() > 1)
+        {
+            messages.at(0).routing_id();
+            clientmessage = std::string("[" + messages[0].to_string() + "] " + messages[1].to_string());
+            std::cout << " message: " << clientmessage << std::endl;
+        } else if(messages.size() > 0)
+        {
+            messages.at(0).routing_id();
+            clientmessage = std::string(messages[0].to_string());
+            std::cout << " message: " << clientmessage << std::endl;
+        }
+    }
+}
+
 
 // Main code
 int main(int, char**)
 {
     zmq::context_t ctx(1);
-    auto thread3 = std::async(std::launch::async, SubscriberThread2, &ctx);
+    subremoteobject.RemoteObjectInitialize(CatGrayRemoteObjects::RemoteType::SUB,
+                                           CatGrayRemoteObjects::RemoteBindMode::IPC,
+                                           "catgrayremoteobjectpub");
+    subremoteobject.RemoteObjectSocket()->set(zmq::sockopt::subscribe, "B");
+    subremoteobject.setReadCallback(SubReadMessage);
+    subremoteobject.start();
+
+    clientremoteobject.RemoteObjectInitialize(CatGrayRemoteObjects::RemoteType::CLIENT,
+                                              CatGrayRemoteObjects::RemoteBindMode::IPC,
+                                              "catgrayremoteobject");
+    clientremoteobject.setReadCallback(ClientReadMessage);
+    clientremoteobject.start();
 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
@@ -192,6 +222,24 @@ int main(int, char**)
                 ImGui::Text(message.c_str());
 
             }
+
+            ImGui::NewLine();
+            if (ImGui::Button("Clent Send Message"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            {
+                counter++;
+                // publisher.send(zmq::str_buffer("B"), zmq::send_flags::sndmore);
+
+                std::string message = std::string("Message in B Client " + std::to_string(counter));
+                bool state = clientremoteobject.send(message);
+
+            }
+            ImGui::SameLine();
+            if (!clientmessage.empty())                            // Buttons return true when clicked (most widgets return true when edited/activated)
+            {
+                ImGui::Text(clientmessage.c_str());
+
+            }
+
             //ImGui::Text("counter = %d", counter);
             ImVec2 windowSize = ImGui::GetWindowSize();
             // 获取窗口的内容区域大小
@@ -240,7 +288,6 @@ int main(int, char**)
 
     glfwDestroyWindow(window);
     glfwTerminate();
-    thread3.wait();
 
     return 0;
 }

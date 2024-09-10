@@ -19,14 +19,26 @@ add_executable(
 target_link_libraries(
     gui_serives_examples
     PRIVATE cppzmq ${CMAKE_THREAD_LIBS_INIT} imgui-gl3
+    CatGrayRemoteObjects_a
 )
 
 add_executable(
-    gui_client_examples
-    gui_client_examples.cpp
+    gui_client_examplesB
+    gui_client_examplesB.cpp
 )
 target_link_libraries(
-    gui_client_examples
+    gui_client_examplesB
     PRIVATE cppzmq ${CMAKE_THREAD_LIBS_INIT} imgui-gl3
+    CatGrayRemoteObjects_a
+)
+
+add_executable(
+    gui_client_examplesC
+    gui_client_examplesC.cpp
+)
+target_link_libraries(
+    gui_client_examplesC
+    PRIVATE cppzmq ${CMAKE_THREAD_LIBS_INIT} imgui-gl3
+    CatGrayRemoteObjects_a
 )
 

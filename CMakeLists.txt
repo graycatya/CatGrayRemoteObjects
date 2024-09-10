@@ -50,7 +50,7 @@ set(3RDPARTY
 
 
 set(MODULES
-#    CatGrayRemoteObjects
+    CatGrayRemoteObjects
 )
 
 set(EXAMPLES
@@ -86,9 +86,9 @@ foreach(3rdparty_module ${3RDPARTY})
 
 endforeach(3rdparty_module ${3RDPARTY})
 
-# foreach(module ${MODULES})
-#     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/${module})
-# endforeach(module ${MODULES})
+foreach(module ${MODULES})
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/${module})
+endforeach(module ${MODULES})
 if(CATGRAYREMOTEOBJECTSPROJECTS_EXAMPLES)
 foreach(example ${EXAMPLES})
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples/${example})
