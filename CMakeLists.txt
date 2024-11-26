@@ -24,11 +24,10 @@ message(STATUS " .. cmake current source ................. = ${CMAKE_CURRENT_SOU
 message(STATUS " .. cmake system name ................. = ${CMAKE_SYSTEM_NAME}")
 message(STATUS "------------------------------------------------------------ ")
 
-# build option
-option(CATGRAYREMOTEOBJECTSPROJECTS_EXAMPLES "Build examples" OFF)
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+# build option
+option(CATGRAYREMOTEOBJECTSPROJECTS_EXAMPLES "Build examples" OFF)
 option(IMGUI_TEST "Build imgui test" OFF)
 set(FOLDER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/imgui-gl3/imgui")
 
